@@ -1,0 +1,3 @@
+module TP {
+	requires junit;
+}
