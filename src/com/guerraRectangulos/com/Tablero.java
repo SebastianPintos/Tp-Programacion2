@@ -7,6 +7,7 @@ public class Tablero {
 	private int ancho;
 	private int largo;
 	public char[][] matriz;
+	
 	private int[] cursor;
 	private ArrayList<Tupla<Coordenada,Rectangulo>> rectangulosJ1;
 	private ArrayList<Tupla<Coordenada,Rectangulo>> rectangulosJ2;
@@ -36,10 +37,10 @@ public class Tablero {
 				Coordenada coordenada = new Coordenada(cursor[0], cursor[1]);
 				Tupla<Coordenada, Rectangulo> tupla = new Tupla<Coordenada,Rectangulo>(coordenada,rec);
 			rectangulosJ1.add(tupla);
-			for (int i = cursor[0]; i < cursor[0] + rec.getAncho(); i++) {
-				for (int j = cursor[1]; j < cursor[1] + rec.getLargo(); j++) {
+			for (int i = coordenada.getx1(); i < coordenada.getx1() + rec.getAncho(); i++) {
+				for (int j = coordenada.gety1(); j < coordenada.gety1() + rec.getLargo(); j++) {
 					matriz[i][j] = 'X';
-					if (cursor[0] == i && cursor[1] == j)
+					if (coordenada.getx1() == i && coordenada.gety1() == j)
 						matriz[i][j] = (char) (turno + 64);
 
 				}
@@ -53,10 +54,10 @@ public class Tablero {
 				Coordenada coordenada = new Coordenada(cursor[0], cursor[1]);
 				Tupla<Coordenada, Rectangulo> tupla = new Tupla<Coordenada,Rectangulo>(coordenada,rec);
 			rectangulosJ2.add(tupla);
-			for (int i = cursor[0]; i > cursor[0] - rec.getAncho(); i--) {
-				for (int j = cursor[1]; j > cursor[1] - rec.getLargo(); j--) {
+			for (int i = coordenada.getx1(); i > coordenada.getx1() - rec.getAncho(); i--) {
+				for (int j = coordenada.gety1(); j > coordenada.gety1() - rec.getLargo(); j--) {
 					matriz[i][j] = 'O';
-					if (cursor[0] - rec.getAncho() == i - 1 && cursor[1] - rec.getLargo() == j - 1)
+					if (coordenada.getx1() - rec.getAncho() == i - 1 && coordenada.gety1() - rec.getLargo() == j - 1)
 						matriz[i][j] = (char) (turno + 64);
 
 				}
@@ -69,8 +70,10 @@ public class Tablero {
 		return 0;
 	}
 	
+	//Este metodo retorna el area del cuadrado que se elimino
 	public int eliminarRectangulo(int turno) {
 		Random r = new Random();
+		
 		if (turno%2==0 && rectangulosJ1.size()>0) {
 			int random = r.nextInt(rectangulosJ1.size());
 			//Recorro en el tablero, las posiciones donde estaba ese rectangulo y las borro.
@@ -79,12 +82,11 @@ public class Tablero {
 					matriz[i][j] = ' ';
 				}
 			}
-			//Elimino el rectangulo de la lista
+			//Guardo el area
 			int area = rectangulosJ1.get(random).t2.area();
+			//Elimino el rectangulo de la lista
 			rectangulosJ1.remove(random);
 			return area;
-			//Recorro en el tablero, las posiciones donde estaba ese rectangulo y las borro.
-			//Elimino el rectangulo de la lista
 		}
 		if (turno%2==1 && rectangulosJ2.size()>0) {
 			int random = r.nextInt(rectangulosJ2.size());
@@ -95,12 +97,12 @@ public class Tablero {
 					//Descuento los puntos
 				}
 			}
-			//Elimino el rectangulo de la lista
+			
+			//Guardo el area
 			int area = rectangulosJ2.get(random).t2.area();
+			//Elimino el rectangulo de la lista
 			rectangulosJ2.remove(random);
 			return area;
-			//Recorro en el tablero, las posiciones donde estaba ese rectangulo y las borro.
-			//Elimino el rectangulo de la lista
 		}
 		return 0;
 	}

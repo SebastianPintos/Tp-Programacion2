@@ -1,4 +1,5 @@
 package com.guerraRectangulos.com;
+
 import java.util.*;
 
 public class GR {
@@ -8,11 +9,10 @@ public class GR {
 	private Tablero tablero;
 	private int puntosJ1;
 	private int puntosJ2;
-	//cursor se usa para guardar la posicion libre en el tablero para luego poner el rectangulo
 	private int turnosPerdidos;
 
 	public GR(int a, int l) {
-		tablero = new Tablero(a,l);
+		tablero = new Tablero(a, l);
 		turno = 0;
 		turnosPerdidos = 0;
 		ganador = "";
@@ -20,40 +20,44 @@ public class GR {
 		puntosJ2 = 0;
 	}
 
-
 	public String jugar() {
 
-		if (turnosPerdidos < 2) { //Si todavia el juego no termino
+		if (turnosPerdidos < 2) { // Si todavia el juego no termino
 
 			turno++;
-			//se crea un rectangulo de medidas aleatorias(entre 2 y un tercio dele tablero)
+			// se crea un rectangulo de medidas aleatorias(entre 2 y un tercio dele tablero)
 			Random a = new Random();
 			Random l = new Random();
 			int ancho = a.nextInt(tablero.getAncho() / 3) + 2;
 			int largo = l.nextInt(tablero.getLargo() / 3) + 2;
 			Rectangulo rec = new Rectangulo(ancho, largo);
 
-			//Turnos impares(Jugador 1)
-			if(turno %2 == 1) {
+			// Turnos impares(Jugador 1)
+			if (turno % 2 == 1) {
+				// Guardo los puntos en una variable auxiliar
 				int puntosAux = puntosJ1;
-					puntosJ1 += tablero.pintar(rec, turno);
-					if (puntosJ1 == puntosAux)
-						turnosPerdidos++;
-					else 
-						turnosPerdidos = 0;
-					
+				//Pinto y guardo los puntos
+				puntosJ1 += tablero.pintar(rec, turno);
+				//Si NO sumo puntos, quiere decir que no se pudo pintar
+				if (puntosJ1 == puntosAux)
+					turnosPerdidos++;
+				else
+					turnosPerdidos = 0;
+
 			}
-			else if(turno %2 == 0) {
+			// Turnos pares(Jugador 2)
+			else if (turno % 2 == 0) {
 				int puntosAux = puntosJ2;
-					puntosJ2 += tablero.pintar(rec, turno);
-			if (puntosJ2 == puntosAux)
-				turnosPerdidos++;
-			else 
-				turnosPerdidos = 0;
-			
+				puntosJ2 += tablero.pintar(rec, turno);
+				if (puntosJ2 == puntosAux)
+					turnosPerdidos++;
+				else
+					turnosPerdidos = 0;
+
 			}
 		}
-		//Si ya se perdieron 2 turnos, pongo la variable en un valor que no afecte al juego
+		// Si ya se perdieron 2 turnos, pongo la variable en un valor que no afecte al
+		// juego
 		if (turnosPerdidos == 2) {
 			turnosPerdidos = 3;
 			if (puntosJ1 > puntosJ2)
@@ -64,19 +68,18 @@ public class GR {
 				ganador = "Empate";
 		}
 		return ganador;
-}
-
+	}
 
 	public void eliminarRect() {
 		turno++;
-		if(turno%2==1)
+		if (turno % 2 == 1)
 			puntosJ2 -= tablero.eliminarRectangulo(turno);
-		if(turno%2==0)
+		if (turno % 2 == 0)
 			puntosJ1 -= tablero.eliminarRectangulo(turno);
 	}
 
 	public Rectangulo ultimoRectangulo() {
-			return tablero.getUltimoRectangulo();
+		return tablero.getUltimoRectangulo();
 	}
 
 	@Override
@@ -96,41 +99,40 @@ public class GR {
 		tab.append(puntosJ2);
 		tab.append("\nturno: ");
 		tab.append(turno);
-		tab.append("\n\nJUEGO TERMINADO.\nGanador: " + ganador + " con "
-					+ String.valueOf(Math.max(puntosJ1, puntosJ2)) + " puntos");
+		if(turnosPerdidos == 3)
+		tab.append("\n\nJUEGO TERMINADO.\nGanador: " + ganador + " con " + String.valueOf(Math.max(puntosJ1, puntosJ2))
+				+ " puntos");
 		return tab.toString();
 	}
 
-	//MISMA FUNCION JUGAR PERO SIN "DADOS"
+	// MISMA FUNCION JUGAR PERO "SIN DADOS"
 	public String jugar(int ancho, int largo) {
-		
-		
-		if (turnosPerdidos < 2) { //Si todavia el juego no termino
-			
+
+		if (turnosPerdidos < 2) { // Si todavia el juego no termino
+
 			turno++;
 			Rectangulo rec = new Rectangulo(ancho, largo);
-			//Turnos impares(Jugador 1)
-			if(turno %2 == 1) {
+			if (turno % 2 == 1) {
 				int puntosAux = puntosJ1;
-					puntosJ1 += tablero.pintar(rec, turno);
-					if (puntosJ1 == puntosAux)
-						turnosPerdidos++;
-					else 
-						turnosPerdidos = 0;
-					
-			}
-			else if(turno %2 == 0) {
+				puntosJ1 += tablero.pintar(rec, turno);
+				if (puntosJ1 == puntosAux)
+					turnosPerdidos++;
+				else
+					turnosPerdidos = 0;
+
+			} else if (turno % 2 == 0) {
 				int puntosAux = puntosJ2;
-					puntosJ2 += tablero.pintar(rec, turno);
-			if (puntosJ2 == puntosAux)
-				turnosPerdidos++;
-			else 
-				turnosPerdidos = 0;
-			
+				puntosJ2 += tablero.pintar(rec, turno);
+				if (puntosJ2 == puntosAux)
+					turnosPerdidos++;
+				else
+					turnosPerdidos = 0;
+
 			}
 		}
-			
-		//Si ya se perdieron 2 turnos, pongo la variable en un valor que no afecte al juego
+
+		// Si ya se perdieron 2 turnos, pongo la variable en un valor que no afecte al
+		// juego
 		if (turnosPerdidos == 2) {
 			turnosPerdidos = 3;
 			if (puntosJ1 > puntosJ2)
@@ -142,8 +144,7 @@ public class GR {
 
 		}
 		return ganador;
-}
-
+	}
 
 	@Override
 	public int hashCode() {
@@ -154,10 +155,10 @@ public class GR {
 		result = prime * result + ((tablero == null) ? 0 : tablero.hashCode());
 		result = prime * result + turno;
 		result = prime * result + turnosPerdidos;
-		result = prime * result + ((tablero.getUltimoRectangulo() == null) ? 0 : tablero.getUltimoRectangulo().hashCode());
+		result = prime * result
+				+ ((tablero.getUltimoRectangulo() == null) ? 0 : tablero.getUltimoRectangulo().hashCode());
 		return result;
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -181,17 +182,16 @@ public class GR {
 		return true;
 	}
 
-
 	public int area(int i) {
 
-		if(i%2==1) {
-			if(tablero.rectangulosJ1().size() > i/2)
-				return tablero.rectangulosJ1().get(i/2).t2.area();
+		if (i % 2 == 1) {
+			if (tablero.rectangulosJ1().size() > i / 2)
+				return tablero.rectangulosJ1().get(i / 2).t2.area();
 			else
 				return 0;
 		}
-		if(tablero.rectangulosJ2().size() > i/2-1)
-			return tablero.rectangulosJ2().get(i/2-1).t2.area();
+		if (tablero.rectangulosJ2().size() > i / 2 - 1)
+			return tablero.rectangulosJ2().get(i / 2 - 1).t2.area();
 		else
 			return 0;
 	}
